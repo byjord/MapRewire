@@ -25,9 +25,7 @@ defmodule MapRewire do
   1. `data` is passed as `content`
   2. `transforms` is passed as `list` or `binary`.
 
-  **Output:**
-
-  `[left, right]` (`[ original, rekeyed ]`). `left` is the original map. `right` is the new, rekeyed, map.
+  **Output:**: `{:ok, map, remap}` or `{:error, reason}`
   """
   defmacro data <~> transforms do
     quote do
@@ -66,40 +64,40 @@ defmodule MapRewire do
   end
 
   #
-  # Rewire raise statements
+  # Rewire argument errors
   #
   def rewire(arg1, arg2)
       when is_map(arg1) == false and (is_list(arg2) == false or is_binary(arg2) == false),
-      do:
-        raise(
-          ArgumentError,
-          "[MapRewire:arg1<~>arg2] bad arguments. Arg1 should be a map, Arg2 should be a list or string." <>
-            " Arg1: `#{inspect(arg1)}`, Arg2: `#{inspect(arg2)}`"
-        )
+      do: {
+        :error,
+        :bad_args,
+        "[MapRewire:arg1<~>arg2] bad arguments. Arg1 should be a map, Arg2 should be a list or string." <>
+          " Arg1: `#{inspect(arg1)}`, Arg2: `#{inspect(arg2)}`"
+      }
 
   def rewire(arg1, _arg2) when is_map(arg1) == false,
-    do:
-      raise(
-        ArgumentError,
-        "[MapRewire:arg1<~>arg2] bad argument. Expected Arg1 to be a map, got `#{inspect(arg1)}`"
-      )
+    do: {
+      :error,
+      :bad_args,
+      "[MapRewire:arg1<~>arg2] bad argument. Expected Arg1 to be a map, got `#{inspect(arg1)}`"
+    }
 
   def rewire(_arg1, arg2) when is_list(arg2) == false and is_binary(arg2) == false,
-    do:
-      raise(
-        ArgumentError,
-        "[MapRewire:arg1<~>arg2] bad argument. Expected Arg2 to be a list or string, got `#{
-          inspect(arg2)
-        }`"
-      )
+    do: {
+      :error,
+      :bad_args,
+      "[MapRewire:arg1<~>arg2] bad argument. Expected Arg2 to be a list or string, got `#{
+        inspect(arg2)
+      }`"
+    }
 
   def rewire(arg1, arg2),
-    do:
-      raise(
-        ArgumentError,
-        "[MapRewire:arg1<~>arg2] bad arguments. Error reason not known. Please check inspections: " <>
-          " Arg1: `#{inspect(arg1)}`, Arg2: `#{inspect(arg2)}`"
-      )
+    do: {
+      :error,
+      :bad_args,
+      "[MapRewire:arg1<~>arg2] bad arguments. Error reason not known. Please check inspections: " <>
+        " Arg1: `#{inspect(arg1)}`, Arg2: `#{inspect(arg2)}`"
+    }
 
   # logic for rewire
   defp rewire_do(content, list) do
