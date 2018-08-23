@@ -27,64 +27,72 @@ defmodule MapRewireTest do
   end
 
   test "Rule: 1 input, 1 rule, string", context do
-    assert context[:content][:single] <~> context[:transforms][:single_string] == [
+    assert context[:content][:single] <~> context[:transforms][:single_string] == {
+             :ok,
              %{"samplekey" => "samplevalue"},
              %{"name" => "samplevalue"}
-           ]
+           }
   end
 
   test "Rule: 1 input, 1 rule, list", context do
-    assert context[:content][:single] <~> context[:transforms][:single_list] == [
+    assert context[:content][:single] <~> context[:transforms][:single_list] == {
+             :ok,
              %{"samplekey" => "samplevalue"},
              %{"name" => "samplevalue"}
-           ]
+           }
   end
 
   test "Rule: 2 input, 2 rule, string", context do
-    assert context[:content][:multiple] <~> context[:transforms][:multiple_string] == [
+    assert context[:content][:multiple] <~> context[:transforms][:multiple_string] == {
+             :ok,
              %{"samplekey" => "samplevalue", "second" => "whoo"},
              %{"name" => "samplevalue", "third" => "whoo"}
-           ]
+           }
   end
 
   test "Rule: 2 input, 2 rule, list", context do
-    assert context[:content][:multiple] <~> context[:transforms][:multiple_list] == [
+    assert context[:content][:multiple] <~> context[:transforms][:multiple_list] == {
+             :ok,
              %{"samplekey" => "samplevalue", "second" => "whoo"},
              %{"name" => "samplevalue", "third" => "whoo"}
-           ]
+           }
   end
 
   test "Rule: 2 input, 3 rule, string", context do
     assert context[:content][:multiple] <~> context[:transforms][:multiple_plus_no_match_string] ==
-             [
+             {
+               :ok,
                %{"samplekey" => "samplevalue", "second" => "whoo"},
                %{"name" => "samplevalue", "third" => "whoo"}
-             ]
+             }
   end
 
   test "Rule: 2 input, 3 rule, list", context do
     assert context[:content][:multiple] <~> context[:transforms][:multiple_plus_no_match_list] ==
-             [
+             {
+               :ok,
                %{"samplekey" => "samplevalue", "second" => "whoo"},
                %{"name" => "samplevalue", "third" => "whoo"}
-             ]
+             }
   end
 
   test "Rule: Fake Shopify Product Data:1", context do
     assert context[:content][:fake_shopify_product_one]
            <~> context[:transforms][:fake_shopify_product_one] ==
-             [
+             {
+               :ok,
                context[:content][:fake_shopify_product_one],
                context[:expected][:fake_shopify_product_one]
-             ]
+             }
   end
 
   test "Rule: Fake Shopify Product Data:2", context do
     assert context[:content][:fake_shopify_product_two]
            <~> context[:transforms][:fake_shopify_product_two] ==
-             [
+             {
+               :ok,
                context[:content][:fake_shopify_product_two],
                context[:expected][:fake_shopify_product_two]
-             ]
+             }
   end
 end

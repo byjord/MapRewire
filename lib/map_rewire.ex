@@ -110,10 +110,11 @@ defmodule MapRewire do
 
     transform_list = rewire_do_create_transform_list(list)
 
-    [
+    {
+      :ok,
       content,
       recursion(transform_list, content)
-    ]
+    }
   end
 
   defp rewire_do_create_transform_list(input) do
